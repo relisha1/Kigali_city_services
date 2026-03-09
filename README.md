@@ -1,174 +1,288 @@
-Project Description
+Project Overview
 
-The Kigali City Services App is a mobile application developed using Flutter and Firebase. The purpose of this application is to help users discover and share important services available around Kigali such as restaurants, hospitals, schools, and other useful locations.
+The Kigali City Services & Places Directory is a mobile application built using Flutter and Firebase. The goal of the application is to help residents and visitors in Kigali easily find important services and places such as hospitals, police stations, libraries, restaurants, cafés, parks, and tourist attractions.
 
-Users can create an account, browse services added by others, and also contribute by adding their own listings. All data is stored in Firebase Firestore, which allows the app to update information in real time.
+Users can create an account, browse available listings, and contribute by adding their own service locations. All data is stored in Firebase Firestore, which allows the application to update information in real time across all users.
 
+This project demonstrates the integration of Flutter frontend development with Firebase backend services, including authentication, cloud databases, and real-time updates.
 
-Features
+Application Features
 
-The application includes the following features:
+The application provides the following main features.
 
 User Authentication
 
-The app uses Firebase Authentication to manage users.
+The app uses Firebase Authentication to manage user accounts.
 
 Users can:
 
-Register a new account
+Sign up using an email and password
 
-Log in with email and password
+Verify their email address before accessing the application
 
-Log out of the application
+Log in and log out securely
 
-Authentication ensures that only registered users can add services.
+After registration, a user profile is created in Firestore and linked to the user's UID.
+Any listing created by the user is associated with this UID.
 
-View Services
+Location Listings (CRUD)
 
-Users can browse a list of services available in Kigali.
+Users can create and manage listings for services and places within Kigali.
 
-Each service contains:
+Each listing contains the following information:
 
-Service name
+Place or Service Name
+
+Category (Hospital, Police Station, Library, Restaurant, Café, Park, Tourist Attraction)
+
+Address
+
+Contact Number
 
 Description
 
-Category
+Geographic Coordinates (Latitude and Longitude)
 
-Location
+Created By (User UID)
 
-Contact information
+Timestamp
 
-These services are stored in Firebase Firestore and displayed dynamically in the app.
+The application supports full CRUD functionality:
 
-Add New Services
+Create a new listing
 
-Logged-in users can add new services to the platform.
+View all listings in the directory
 
-When a user submits a service, the information is saved to the Firestore database, making it available to other users immediately.
+Update listings created by the authenticated user
 
-Real-Time Database
+Delete listings created by the authenticated user
 
-The app uses Cloud Firestore, which means:
+All updates appear immediately in the UI using state management and Firestore real-time updates.
 
-New services appear automatically
+Search and Category Filtering
 
-Data updates in real time
+Users can search for services by name and filter listings by category.
 
-Multiple users can interact with the app simultaneously
+Examples of categories include:
+
+Hospital
+
+Police Station
+
+Library
+
+Restaurant
+
+Café
+
+Park
+
+Tourist Attraction
+
+Search results update dynamically as the user types or changes filters.
+
+Listing Detail Page and Map Integration
+
+When a listing is selected, the user is navigated to a detail page displaying all information about that location.
+
+This page includes:
+
+Full service information
+
+Contact details
+
+Address
+
+Description
+
+Embedded Google Map
+
+The map displays a marker using the stored latitude and longitude coordinates from Firestore.
+
+A navigation button is also provided which launches Google Maps turn-by-turn directions to the selected location.
 
 Technologies Used
 
-The following technologies were used to build the application:
+The following technologies were used to develop the application.
 
 Flutter
-Used to develop the mobile user interface and application logic.
+Used for building the mobile application UI and overall application logic.
 
 Dart
 The programming language used by Flutter.
 
 Firebase Authentication
-Handles user login and registration securely.
+Used for secure user signup, login, logout, and email verification.
 
-Firebase Firestore
-A cloud-based NoSQL database used to store service listings.
+Cloud Firestore
+Used as the cloud database to store service listings and user profiles.
 
-Database Structure
+Google Maps Flutter API
+Used to display map markers and provide navigation functionality.
 
-The application uses a Firestore collection to store service data.
+Provider (State Management)
+Used to manage application state and connect Firestore data to the UI.
 
-Example structure:
+Firestore Database Structure
+
+The application stores data using Cloud Firestore.
+
+Two main collections are used.
+
+Users Collection
+
+Stores profile information for authenticated users.
+
+users
+   userId
+      email
+      createdAt
+Listings Collection
+
+Stores all service or location listings.
 
 listings
-   listing_id
+   listingId
       name
-      description
       category
-      location
-      contact
+      address
+      contactNumber
+      description
+      latitude
+      longitude
       createdBy
+      timestamp
 
-Each document represents one service added by a user.
+Each listing is associated with the UID of the user who created it.
+
+State Management and Architecture
+
+The application uses Provider for state management.
+
+A clean architecture approach was followed where Firestore interactions are separated from the UI.
+
+The architecture is structured as follows:
+
+Models
+Define the structure of data used in the application.
+
+Services
+Handle all Firebase operations such as authentication and Firestore CRUD operations.
+
+Providers
+Manage application state and expose data to the UI.
+
+Screens / UI
+Display data to the user and react to state changes.
+
+Firestore queries are never called directly inside UI widgets.
+Instead, UI components interact with providers, which communicate with the service layer.
+
+This approach ensures:
+
+Clean separation of concerns
+
+Easier maintenance
+
+Automatic UI updates when Firestore data changes
+
+Navigation Structure
+
+The application uses a BottomNavigationBar with four main screens.
+
+Directory
+
+Displays all available listings stored in Firestore.
+
+Users can:
+
+Browse services
+
+Search listings
+
+Filter by category
+
+My Listings
+
+Displays only the listings created by the authenticated user.
+
+Users can:
+
+Edit their listings
+
+Delete their listings
+
+Map View
+
+Displays service listings on a map using their stored geographic coordinates.
+
+Settings
+
+Displays the authenticated user profile information.
+
+This screen also includes a toggle for location-based notification preferences (simulated locally).
 
 Project Structure
 
-The main Flutter project is organized as follows:
+The project follows a structured Flutter folder organization.
 
 lib/
-  screens/
-  models/
-  services/
-  main.dart
+   models/
+   services/
+   providers/
+   screens/
+   widgets/
+   main.dart
 
-screens – contains UI pages such as login, home, and add service screens.
+models → data models for listings and users
 
-models – defines the structure of service data.
+services → Firebase authentication and Firestore operations
 
-services – handles communication with Firebase.
+providers → state management logic
 
-main.dart – the entry point of the application.
+screens → UI pages of the application
 
-How to Run the Project
-1. Clone the repository
-git clone https://github.com/relisha1/Kigali_city_services.git
-2. Navigate into the project
-cd Kigali_city_services
-3. Install dependencies
-flutter pub get
-4. Configure Firebase
+widgets → reusable UI components
 
-Create a Firebase project and connect it to the Flutter app.
+Firebase Setup
 
-Download the Firebase configuration file and place it in:
+To run the project, Firebase must be configured.
+
+Create a Firebase project in the Firebase Console
+
+Enable Firebase Authentication (Email/Password)
+
+Create a Cloud Firestore database
+
+Register the Android or iOS app in Firebase
+
+Download the Firebase configuration file
+
+For Android, place the file in:
 
 android/app/google-services.json
-5. Run the application
+How to Run the Project
+
+Clone the repository
+
+git clone https://github.com/relisha1/Kigali_city_services.git
+
+Navigate to the project folder
+
+cd Kigali_city_services
+
+Install dependencies
+
+flutter pub get
+
+Run the application
+
 flutter run
 
-The app should launch on an emulator or physical device.
-
-Challenges Encountered
-
-During development, a few challenges were experienced.
-
-Firebase configuration
-Linking Firebase with Flutter required correct setup of configuration files.
-
-Authentication management
-Handling login and logout states required understanding how Firebase manages user sessions.
-
-Database design
-Designing the Firestore structure required planning so that services could be stored and retrieved efficiently.
-
-Future Improvements
-
-Some features that could improve the application include:
-
-Adding Google Maps integration
-
-Allowing users to upload images for services
-
-Adding service ratings and reviews
-
-Improving the user interface design
-
-These improvements would make the application more interactive and useful.
-
-Demo Video
-
-A demonstration video explaining the application and showing its functionality will be provided as part of the project submission.
-
-Author
-
-Student Project
-Mobile Application Development Assignment
+The application can be executed on an Android emulator, iOS simulator, or a physical mobile device.
 
 Repository
 
-Project repository:
+GitHub Repository:
 
 https://github.com/relisha1/Kigali_city_services
-
-Conclusion
-
-This project demonstrates how Flutter and Firebase can be combined to create a functional mobile application. Through this project, key concepts such as user authentication, cloud databases, and real-time data updates were implemented successfully.
